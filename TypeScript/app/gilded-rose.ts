@@ -47,7 +47,7 @@ export class GildedRose {
     this.strategyMap = { ...defaultStrategyMap, ...strategyMap };
   }
 
-  private getStrategyKey(item: Item): Exclude<Strategy, 'legacy'> {
+  private getStrategyKey(item: Item): Strategy {
     if (item.name === 'Aged Brie') {
       return 'agedBrie';
     }
