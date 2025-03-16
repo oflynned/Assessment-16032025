@@ -4,24 +4,31 @@ import { AgedBrieStrategy } from './aged-brie.strategy';
 const strategy = new AgedBrieStrategy();
 
 describe('Aged Brief Strategy', () => {
-  it('should increase quality', () => {
-    const item = new Item('Item', 10, 20);
+  describe('updateQuality', () => {
+    it('should increase quality', () => {
+      const item = new Item('Item', 10, 20);
 
-    strategy.updateQuality(item);
-    expect(item.quality).toBe(21);
+      strategy.updateQuality(item);
+
+      expect(item.quality).toBe(21);
+    });
+
+    it('should not increase quality above 50', () => {
+      const item = new Item('Item', 10, 50);
+
+      strategy.updateQuality(item);
+
+      expect(item.quality).toBe(50);
+    });
   });
 
-  it('should not increase quality above 50', () => {
-    const item = new Item('Item', 10, 50);
+  describe('updateSellIn', () => {
+    it('should decrease sellIn by 1', () => {
+      const item = new Item('Item', 10, 20);
 
-    strategy.updateQuality(item);
-    expect(item.quality).toBe(50);
-  });
+      strategy.updateSellIn(item);
 
-  it('should decrease sellIn by 1', () => {
-    const item = new Item('Item', 10, 20);
-
-    strategy.updateSellIn(item);
-    expect(item.sellIn).toBe(9);
+      expect(item.sellIn).toBe(9);
+    });
   });
 });
