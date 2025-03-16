@@ -1,5 +1,5 @@
-import {defineConfig} from 'vitest/config';
 import tsconfigPaths from 'vite-tsconfig-paths';
+import { defineConfig } from 'vitest/config';
 
 export default defineConfig({
   plugins: [tsconfigPaths()],
@@ -8,7 +8,12 @@ export default defineConfig({
     include: ['test/vitest/**/*.{spec,test}.{js,ts}'],
     coverage: {
       provider: 'istanbul',
-      reporter: ['text', 'html']
-    }
+      reporter: ['text', 'html'],
+    },
+  },
+  resolve: {
+    alias: {
+      '~': './app',
+    },
   },
 });
