@@ -1,4 +1,12 @@
-import { GildedRoseStrategy, LegacyStrategy } from '@/strategies';
+import {
+  AgedBrieStrategy,
+  BackstagePassesStrategy,
+  ConjuredStrategy,
+  GildedRoseStrategy,
+  LegacyStrategy,
+  NormalStrategy,
+  SulfurasStrategy,
+} from '@/strategies';
 
 export class Item {
   name: string;
@@ -12,7 +20,14 @@ export class Item {
   }
 }
 
-type Strategy = 'legacy';
+type Strategy =
+  | 'legacy'
+  | 'agedBrie'
+  | 'backstagePasses'
+  | 'sulfuras'
+  | 'conjured'
+  | 'normal';
+
 type Mode = 'legacy' | 'next';
 
 export class GildedRose {
@@ -27,6 +42,11 @@ export class GildedRose {
     this.items = items;
     this.strategyMap = {
       legacy: new LegacyStrategy(),
+      agedBrie: new AgedBrieStrategy(),
+      backstagePasses: new BackstagePassesStrategy(),
+      sulfuras: new SulfurasStrategy(),
+      conjured: new ConjuredStrategy(),
+      normal: new NormalStrategy(),
     };
   }
 
@@ -83,6 +103,26 @@ export class GildedRose {
     }
   }
 
+  private getStrategyKey(item: Item): Exclude<Strategy, 'legacy'> {
+    if (item.name === 'Aged Brie') {
+      return 'agedBrie';
+    }
+
+    if (item.name === 'Backstage passes to a TAFKAL80ETC concert') {
+      return 'backstagePasses';
+    }
+
+    if (item.name === 'Sulfuras, Hand of Ragnaros') {
+      return 'sulfuras';
+    }
+
+    if (item.name === 'Conjured Mana Cake') {
+      return 'conjured';
+    }
+
+    return 'normal';
+  }
+
   updateQuality() {
     if (this.mode === 'legacy') {
       for (let i = 0; i < this.items.length; i++) {
@@ -95,9 +135,11 @@ export class GildedRose {
     }
 
     for (const item of this.items) {
-      this.updateItemQuality(item);
-      this.updateItemSellIn(item);
-      this.handleExpiredItems(item);
+      const key = this.getStrategyKey(item);
+      const strategy = this.strategyMap[key];
+
+      strategy.updateQuality(item);
+      strategy.updateSellIn(item);
     }
 
     return this.items;
