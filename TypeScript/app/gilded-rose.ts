@@ -3,7 +3,6 @@ import {
   BackstagePassesStrategy,
   ConjuredStrategy,
   GildedRoseStrategy,
-  LegacyStrategy,
   NormalStrategy,
   SulfurasStrategy,
 } from '@/strategies';
@@ -21,17 +20,13 @@ export class Item {
 }
 
 type Strategy =
-  | 'legacy'
   | 'agedBrie'
   | 'backstagePasses'
   | 'sulfuras'
   | 'conjured'
   | 'normal';
 
-type Mode = 'legacy' | 'next';
-
 const defaultStrategyMap: Record<Strategy, GildedRoseStrategy> = {
-  legacy: new LegacyStrategy(),
   agedBrie: new AgedBrieStrategy(),
   backstagePasses: new BackstagePassesStrategy(),
   sulfuras: new SulfurasStrategy(),
@@ -46,7 +41,6 @@ export class GildedRose {
 
   constructor(
     items = [] as Array<Item>,
-    private readonly mode: Mode = 'next',
     strategyMap: Partial<Record<Strategy, GildedRoseStrategy>> = {},
   ) {
     this.items = items;
@@ -74,16 +68,6 @@ export class GildedRose {
   }
 
   updateQuality() {
-    if (this.mode === 'legacy') {
-      for (let i = 0; i < this.items.length; i++) {
-        // legacy code lifted from the original implementation with minimal changes
-        // to make it work with individual items
-        this.strategyMap.legacy.updateQuality(this.items[i]);
-      }
-
-      return this.items;
-    }
-
     for (const item of this.items) {
       const key = this.getStrategyKey(item);
       const strategy = this.strategyMap[key];
