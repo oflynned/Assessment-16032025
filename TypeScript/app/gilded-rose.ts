@@ -30,6 +30,15 @@ type Strategy =
 
 type Mode = 'legacy' | 'next';
 
+const defaultStrategyMap: Record<Strategy, GildedRoseStrategy> = {
+  legacy: new LegacyStrategy(),
+  agedBrie: new AgedBrieStrategy(),
+  backstagePasses: new BackstagePassesStrategy(),
+  sulfuras: new SulfurasStrategy(),
+  conjured: new ConjuredStrategy(),
+  normal: new NormalStrategy(),
+};
+
 export class GildedRose {
   items: Array<Item>;
 
@@ -38,16 +47,10 @@ export class GildedRose {
   constructor(
     items = [] as Array<Item>,
     private readonly mode: Mode = 'next',
+    strategyMap: Partial<Record<Strategy, GildedRoseStrategy>> = {},
   ) {
     this.items = items;
-    this.strategyMap = {
-      legacy: new LegacyStrategy(),
-      agedBrie: new AgedBrieStrategy(),
-      backstagePasses: new BackstagePassesStrategy(),
-      sulfuras: new SulfurasStrategy(),
-      conjured: new ConjuredStrategy(),
-      normal: new NormalStrategy(),
-    };
+    this.strategyMap = { ...defaultStrategyMap, ...strategyMap };
   }
 
   private getStrategyKey(item: Item): Exclude<Strategy, 'legacy'> {
