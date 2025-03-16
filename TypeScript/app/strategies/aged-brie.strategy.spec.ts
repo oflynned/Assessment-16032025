@@ -9,9 +9,6 @@ describe('Aged Brief Strategy', () => {
 
     strategy.updateQuality(item);
     expect(item.quality).toBe(21);
-
-    strategy.updateSellIn(item);
-    expect(item.sellIn).toBe(9);
   });
 
   it('should not increase quality above 50', () => {
@@ -19,6 +16,10 @@ describe('Aged Brief Strategy', () => {
 
     strategy.updateQuality(item);
     expect(item.quality).toBe(50);
+  });
+
+  it('should decrease sellIn by 1', () => {
+    const item = new Item('Item', 10, 20);
 
     strategy.updateSellIn(item);
     expect(item.sellIn).toBe(9);

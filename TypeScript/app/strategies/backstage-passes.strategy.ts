@@ -2,7 +2,23 @@ import { Item } from '@/gilded-rose';
 import { GildedRoseStrategy } from '@/strategies/gilded-rose.strategy';
 
 export class BackstagePassesStrategy implements GildedRoseStrategy {
-  updateQuality(item: Item): void {}
+  updateQuality(item: Item): void {
+    if (item.quality >= 50) {
+      return;
+    }
 
-  updateSellIn(item: Item): void {}
+    if (item.sellIn > 10) {
+      item.quality++;
+    } else if (item.sellIn > 5) {
+      item.quality += 2;
+    } else if (item.sellIn >= 0) {
+      item.quality += 3;
+    } else {
+      item.quality = 0;
+    }
+  }
+
+  updateSellIn(item: Item): void {
+    item.sellIn--;
+  }
 }
