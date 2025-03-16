@@ -37,7 +37,7 @@ export class GildedRose {
 
   constructor(
     items = [] as Array<Item>,
-    private readonly mode: Mode = 'legacy',
+    private readonly mode: Mode = 'next',
   ) {
     this.items = items;
     this.strategyMap = {

@@ -1,6 +1,10 @@
 import { Item } from '@/gilded-rose';
 import { GildedRoseStrategy } from './gilded-rose.strategy';
 
+/**
+ * @deprecated  Please use an alternative strategy!
+ *              This will be removed in ticket QOVER-ABC-123 as of <date>
+ */
 export class LegacyStrategy implements GildedRoseStrategy {
   updateQuality(item: Item): void {
     if (
