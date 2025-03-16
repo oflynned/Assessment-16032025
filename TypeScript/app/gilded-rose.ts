@@ -50,59 +50,6 @@ export class GildedRose {
     };
   }
 
-  private updateItemQuality(item: Item) {
-    if (item.name === 'Aged Brie') {
-      if (item.quality < 50) {
-        item.quality++;
-      }
-    } else if (item.name === 'Backstage passes to a TAFKAL80ETC concert') {
-      if (item.quality < 50) {
-        item.quality++;
-
-        if (item.sellIn <= 10) {
-          if (item.quality < 50) {
-            item.quality++;
-          }
-        }
-        if (item.sellIn <= 5) {
-          if (item.quality < 50) {
-            item.quality++;
-          }
-        }
-      }
-    } else if (item.name !== 'Sulfuras, Hand of Ragnaros') {
-      if (item.quality > 0) {
-        item.quality--;
-      }
-    }
-  }
-
-  private updateItemSellIn(item: Item) {
-    if (item.name === 'Sulfuras, Hand of Ragnaros') {
-      return;
-    }
-
-    item.sellIn--;
-  }
-
-  private handleExpiredItems(item: Item) {
-    if (item.sellIn < 0) {
-      if (item.name !== 'Aged Brie') {
-        if (item.name !== 'Backstage passes to a TAFKAL80ETC concert') {
-          if (item.quality > 0 && item.name !== 'Sulfuras, Hand of Ragnaros') {
-            item.quality--;
-          }
-        } else {
-          item.quality = 0;
-        }
-      } else {
-        if (item.quality < 50) {
-          item.quality++;
-        }
-      }
-    }
-  }
-
   private getStrategyKey(item: Item): Exclude<Strategy, 'legacy'> {
     if (item.name === 'Aged Brie') {
       return 'agedBrie';
