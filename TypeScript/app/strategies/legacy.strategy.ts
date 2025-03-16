@@ -1,7 +1,7 @@
 import { Item } from '@/gilded-rose';
 import { GildedRoseStrategy } from './gilded-rose.strategy';
 
-export class DeprecatedStrategy implements GildedRoseStrategy {
+export class LegacyStrategy implements GildedRoseStrategy {
   updateQuality(item: Item): void {
     if (
       item.name != 'Aged Brie' &&
@@ -51,5 +51,8 @@ export class DeprecatedStrategy implements GildedRoseStrategy {
     }
   }
 
-  updateSellIn(_item: Item): void {}
+  updateSellIn(_item: Item): void {
+    // Do nothing since it was all handled in updateQuality initially
+    // quality and sellIn are mixed together anyway so let's keep it that way
+  }
 }

@@ -1,4 +1,4 @@
-import { DeprecatedStrategy } from '@/strategies/legacy.strategy';
+import { GildedRoseStrategy, LegacyStrategy } from '@/strategies';
 
 export class Item {
   name: string;
@@ -12,38 +12,92 @@ export class Item {
   }
 }
 
+type Strategy = 'legacy';
+type Mode = 'legacy' | 'next';
+
 export class GildedRose {
   items: Array<Item>;
 
-  private readonly mode: 'old' | 'new' = 'new';
+  private readonly strategyMap: Record<Strategy, GildedRoseStrategy>;
 
-  constructor(items = [] as Array<Item>) {
+  constructor(
+    items = [] as Array<Item>,
+    private readonly mode: Mode = 'legacy',
+  ) {
     this.items = items;
+    this.strategyMap = {
+      legacy: new LegacyStrategy(),
+    };
   }
 
-  private updateItemQuality(item: Item) {}
+  private updateItemQuality(item: Item) {
+    if (item.name === 'Aged Brie') {
+      if (item.quality < 50) {
+        item.quality++;
+      }
+    } else if (item.name === 'Backstage passes to a TAFKAL80ETC concert') {
+      if (item.quality < 50) {
+        item.quality++;
 
-  private updateItemSellIn(item: Item) {}
+        if (item.sellIn <= 10) {
+          if (item.quality < 50) {
+            item.quality++;
+          }
+        }
+        if (item.sellIn <= 5) {
+          if (item.quality < 50) {
+            item.quality++;
+          }
+        }
+      }
+    } else if (item.name !== 'Sulfuras, Hand of Ragnaros') {
+      if (item.quality > 0) {
+        item.quality--;
+      }
+    }
+  }
 
-  private handleExpiredItems(item: Item) {}
+  private updateItemSellIn(item: Item) {
+    if (item.name === 'Sulfuras, Hand of Ragnaros') {
+      return;
+    }
+
+    item.sellIn--;
+  }
+
+  private handleExpiredItems(item: Item) {
+    if (item.sellIn < 0) {
+      if (item.name !== 'Aged Brie') {
+        if (item.name !== 'Backstage passes to a TAFKAL80ETC concert') {
+          if (item.quality > 0 && item.name !== 'Sulfuras, Hand of Ragnaros') {
+            item.quality--;
+          }
+        } else {
+          item.quality = 0;
+        }
+      } else {
+        if (item.quality < 50) {
+          item.quality++;
+        }
+      }
+    }
+  }
 
   updateQuality() {
-    if (this.mode === 'old') {
-      const strategy = new DeprecatedStrategy();
-
+    if (this.mode === 'legacy') {
       for (let i = 0; i < this.items.length; i++) {
         // legacy code lifted from the original implementation with minimal changes
         // to make it work with individual items
-        strategy.updateQuality(this.items[i]);
+        this.strategyMap.legacy.updateQuality(this.items[i]);
       }
 
       return this.items;
     }
 
     for (const item of this.items) {
-      // this.updateItemQuality(item);
-      // this.updateItemSellIn(item);
-      // this.handleExpiredItems(item);
+      this.updateItemQuality(item);
+      this.updateItemSellIn(item);
+      this.handleExpiredItems(item);
     }
 
     return this.items;
